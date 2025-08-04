@@ -1,7 +1,7 @@
-export default async function Dashboard() {
+export default function Dashboard() {
   return (
     <div className='flex flex-col rounded-md gap-5'>
-      <form action=''></form>
+      <h1>dashbaord</h1>
     </div>
   );
 }

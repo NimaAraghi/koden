@@ -4,6 +4,15 @@ import { db } from "@/drizzle/db";
 import { PostTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 
+export async function getPostBySlug(slug: string) {
+  const [post] = await db
+    .select()
+    .from(PostTable)
+    .where(eq(PostTable.slug, slug));
+
+  return post ? post : null;
+}
+
 export async function insertPost(data: typeof PostTable.$inferInsert) {
   const [newPost] = await db
     .insert(PostTable)

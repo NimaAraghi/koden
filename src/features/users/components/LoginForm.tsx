@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Github } from "lucide-react";
 
 import Link from "next/link";
 import { login } from "@/features/users/actions/auth";

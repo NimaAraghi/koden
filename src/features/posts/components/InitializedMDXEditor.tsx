@@ -35,7 +35,7 @@ export default function InitializedMDXEditor({
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
         toolbarPlugin({
-          toolbarClassName: "flex",
+          toolbarClassName: "",
           toolbarContents: () => (
             <>
               <UndoRedo />

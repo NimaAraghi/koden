@@ -26,7 +26,7 @@ export default async function Navbar() {
               </Link>
             </Button>
             <Button className='hidden md:block' asChild>
-              <Link href='/dashboard/posts/create'>Create Post</Link>
+              <Link href='/new'>Create Post</Link>
             </Button>
             <UserAvatar user={session.user} />
           </div>

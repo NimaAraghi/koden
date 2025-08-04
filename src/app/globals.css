@@ -195,10 +195,6 @@
   .post-card:hover .date {
     @apply bg-white;
   }
-
-  .mdxeditor-root-contenteditable {
-    @apply h-96 overflow-y-scroll;
-  }
 }
 
 @layer utilities {
