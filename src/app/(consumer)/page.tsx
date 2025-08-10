@@ -1,5 +1,4 @@
 import Container from "@/components/Container";
-import Hero from "@/components/Hero";
 import PostCard from "@/components/PostCard";
 
 const posts = [
@@ -41,14 +40,14 @@ const posts = [
 export default async function Home() {
   return (
     <div>
-      <Hero>
+      <section className='hero'>
         <p className='tag tag-tri'>Share, Comment, And Develop</p>
-        <h1 className='heading'>share your knowledge, other help developers</h1>
+        <h1 className='heading'>share your knowledge, help other developers</h1>
         <p className='sub-heading'>
           An online platform offering developers a place to share their
           knowledge and stories
         </p>
-      </Hero>
+      </section>
       <Container className='flex flex-col gap-8'>
         <h1>Newest Posts</h1>
         <div className='post-grid'>

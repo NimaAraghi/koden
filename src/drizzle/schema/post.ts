@@ -3,7 +3,7 @@ import { createdAt, id, updatedAt } from "../schemaHelpers";
 import { UserTable } from "./user";
 import { relations } from "drizzle-orm";
 import { CommentTable } from "./comment";
-import { PostCategoryTable } from "./postCategory";
+import { PostTagTable } from "./postTag";
 
 export const postStatuses = ["published", "draft"] as const;
 export type postStatus = (typeof postStatuses)[number];
@@ -29,5 +29,5 @@ export const PostRelationships = relations(PostTable, ({ one, many }) => ({
     references: [UserTable.id],
   }),
   comments: many(CommentTable),
-  categories: many(PostCategoryTable),
+  tags: many(PostTagTable),
 }));

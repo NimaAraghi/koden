@@ -14,14 +14,14 @@ export function SocialButtons() {
       <button
         onClick={() => onClick("github")}
         type='button'
-        className='shadow-border rounded-sm w-full flex items-center justify-center p-2'
+        className='cursor-pointer shadow-border rounded-sm w-full flex items-center justify-center p-2'
       >
         <FaGithub className='size-5' />
       </button>
       <button
         onClick={() => onClick("google")}
         type='button'
-        className='shadow-border rounded-sm w-full flex items-center justify-center p-2'
+        className='cursor-pointer shadow-border rounded-sm w-full flex items-center justify-center p-2'
       >
         <FaGoogle className='size-5' />
       </button>

@@ -3,6 +3,7 @@
 import { db } from "@/drizzle/db";
 import { PostTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { revalidatePostCache } from "./cache";
 
 export async function getPostBySlug(slug: string) {
   const [post] = await db
@@ -25,31 +26,37 @@ export async function insertPost(data: typeof PostTable.$inferInsert) {
 
   if (newPost == null) throw new Error("Failed to insert post");
 
+  revalidatePostCache(newPost.id);
+
   return newPost;
 }
 
-export async function updateUser(
-  { id }: { id: string },
+export async function updatePost(
+  { slug }: { slug: string },
   data: Partial<typeof PostTable.$inferInsert>
 ) {
   const [updatedPost] = await db
     .update(PostTable)
     .set(data)
-    .where(eq(PostTable.id, id))
+    .where(eq(PostTable.slug, slug))
     .returning();
 
   if (updatedPost == null) throw new Error("Failed to update post");
 
+  revalidatePostCache(updatedPost.id);
+
   return updatedPost;
 }
 
-export async function deleteUser({ id }: { id: string }) {
-  const [deletedUser] = await db
+export async function deletePost({ slug }: { slug: string }) {
+  const [deletedPost] = await db
     .delete(PostTable)
-    .where(eq(PostTable.id, id))
+    .where(eq(PostTable.slug, slug))
     .returning();
 
-  if (deletedUser == null) throw new Error("Failed to delete post");
+  if (deletedPost == null) throw new Error("Failed to delete post");
 
-  return deletedUser;
+  revalidatePostCache(deletedPost.id);
+
+  return deletedPost;
 }
