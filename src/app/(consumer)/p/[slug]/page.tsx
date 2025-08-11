@@ -13,7 +13,12 @@ import { Suspense } from "react";
 import ReactMarkdown from "react-markdown";
 
 // Child component that fetches and renders the post
-async function PostContent({ slug }: { slug: string }) {
+async function PostContent({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ slug: string }>;
+}) {
+  const { slug } = await paramsPromise;
   const post = await getPost(slug);
 
   if (!post) notFound();
@@ -52,16 +57,14 @@ async function PostContent({ slug }: { slug: string }) {
   );
 }
 
-export default async function PostPage({
+export default function PostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <PostContent slug={slug} />
+      <PostContent paramsPromise={params} />
     </Suspense>
   );
 }
