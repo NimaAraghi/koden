@@ -1,43 +1,14 @@
 import Container from "@/components/Container";
-import PostCard from "@/components/PostCard";
-
-const posts = [
-  {
-    title: "Getting Started with TypeScript",
-    slug: "getting-started-with-typescript",
-    content:
-      "TypeScript extends JavaScript by adding types. In this post, we explore how to set up a TypeScript project from scratch.",
-    image: "/test.png",
-    authorName: "Nima Araghi",
-    authorAvatar: "https://avatars.githubusercontent.com/u/166223644?v=4",
-    categories: ["Programming", "TypeScript", "Frontend"],
-    createdAt: new Date(),
-  },
-  {
-    title: "Deploying a Next.js App on Vercel",
-    slug: "deploying-nextjs-on-vercel",
-    content:
-      "Learn how to deploy your Next.js application with ease using Vercel’s platform. Step-by-step guide included.",
-    image: "/test.png",
-    authorName: "Sara Khalili",
-    authorAvatar: "https://avatars.githubusercontent.com/u/166223644?v=4",
-    categories: ["DevOps", "Next.js", "Deployment"],
-    createdAt: new Date(),
-  },
-  {
-    title: "10 Tips to Improve Your React Code",
-    slug: "10-tips-to-improve-react-code",
-    content:
-      "From using custom hooks to organizing components better, these tips will help you write cleaner and more efficient React code.",
-    image: "/test.png",
-    authorName: "Ali Moradi",
-    authorAvatar: "https://avatars.githubusercontent.com/u/166223644?v=4",
-    categories: ["React", "Frontend", "Best Practices"],
-    createdAt: new Date(),
-  },
-];
+import { db } from "@/drizzle/db";
+import { PostTable, UserTable } from "@/drizzle/schema";
+import PostCard from "@/features/posts/components/PostCard";
+import { getPostGlobalTag } from "@/features/posts/db/cache";
+import { desc, eq } from "drizzle-orm";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 export default async function Home() {
+  const posts = await getPosts();
+
   return (
     <div>
       <section className='hero'>
@@ -48,14 +19,37 @@ export default async function Home() {
           knowledge and stories
         </p>
       </section>
-      <Container className='flex flex-col gap-8'>
-        <h1>Newest Posts</h1>
-        <div className='post-grid'>
-          {posts.map((post, index) => (
-            <PostCard key={index} post={post} />
-          ))}
+      <Container className='flex gap-4'>
+        <div className='flex-1'>
+          <h1 className='mb-4'>Newest Posts</h1>
+          <div className='flex flex-col'>
+            {posts.map((post, index) => (
+              <PostCard key={index} post={post} />
+            ))}
+          </div>
         </div>
+        <div className='w-24 h-24 bg-gray-200 rounded-2xl shadow'></div>
       </Container>
     </div>
   );
+}
+
+async function getPosts() {
+  "use cache";
+  cacheTag(getPostGlobalTag());
+
+  return db
+    .select({
+      id: PostTable.id,
+      title: PostTable.title,
+      image: PostTable.image,
+      slug: PostTable.slug,
+      createdAt: PostTable.createdAt,
+      authorName: UserTable.name,
+      authorAvatar: UserTable.image,
+    })
+    .from(PostTable)
+    .where(eq(PostTable.status, "published"))
+    .innerJoin(UserTable, eq(UserTable.id, PostTable.authorId))
+    .orderBy(desc(PostTable.createdAt));
 }

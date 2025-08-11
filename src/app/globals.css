@@ -172,30 +172,6 @@
 }
 
 @layer components {
-  .post-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4;
-  }
-
-  .post-card {
-    @apply flex flex-col gap-3 py-5 px-2 rounded-2xl border-4 border-black [box-shadow:3px_4px_0px_1px_rgba(0,0,0,1)];
-  }
-
-  .post-card:hover {
-    @apply bg-pink/20 transition-all duration-300;
-  }
-
-  .post-card:hover {
-    @apply border-4 border-pink [box-shadow:3px_4px_0px_1px_var(--color-pink)] transition-all duration-300;
-  }
-
-  .post-card .date {
-    @apply bg-pink/30 px-3 py-1 rounded-full font-semibold w-fit;
-  }
-
-  .post-card:hover .date {
-    @apply bg-white;
-  }
-
   .editor .mdxeditor-root-contenteditable {
     @apply p-[calc(1.25rem-var(--spacing-3))]
     md:px-[calc(3rem-var(--spacing-3))]
@@ -208,7 +184,7 @@
 @layer utilities {
   .shadow-border,
   .shadow-border:focus {
-    @apply border-2 border-black [box-shadow:3px_4px_0px_1px_rgba(0,0,0,1)];
+    @apply [box-shadow:3px_4px_0px_1px_rgba(0,0,0,1)];
   }
 
   button.shadow-border:active {

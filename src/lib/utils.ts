@@ -10,3 +10,7 @@ export const formatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
 });
+
+export function stringToNumber(str: string) {
+  return str.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+}
