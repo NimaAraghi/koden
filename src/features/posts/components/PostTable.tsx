@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -23,12 +24,12 @@ import React from "react";
 
 export default function PostTable({ posts }: { posts: any[] }) {
   return (
-    <Table>
+    <Table className='bg-white rounded-lg'>
       <TableHeader>
         <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className='font-bold text-xl'>Title</TableHead>
+          <TableHead className='font-bold text-xl'>Status</TableHead>
+          <TableHead className='font-bold text-xl'>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,16 +37,27 @@ export default function PostTable({ posts }: { posts: any[] }) {
           <TableRow key={post.id}>
             <TableCell>
               <Link
-                href={`/posts/${post.slug}`}
+                href={`/p/${post.slug}`}
                 className='font-extrabold text-3xl text-blue-500'
               >
                 {post.title}
               </Link>
             </TableCell>
-            <TableCell>{post.status}</TableCell>
+            <TableCell>
+              <Badge
+                className={
+                  post.status === "published" ? "bg-green-500 text-white" : ""
+                }
+                variant={
+                  post.status === "published" ? "secondary" : "destructive"
+                }
+              >
+                {post.status}
+              </Badge>
+            </TableCell>
             <TableCell>
               <div className='flex gap-2'>
-                <Button asChild variant='destructive'>
+                <Button asChild variant='outline'>
                   <Link href={`/${post.slug}/edit`}>Edit</Link>
                 </Button>
                 <AlertDialog>

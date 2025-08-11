@@ -10,7 +10,7 @@ export default async function Posts() {
 
   return (
     <div>
-      <h2>Posts</h2>
+      <h2 className='my-0'>Posts</h2>
       <PostTable posts={posts} />
     </div>
   );

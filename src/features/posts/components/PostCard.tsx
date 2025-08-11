@@ -30,7 +30,7 @@ export default function PostCard({ post }: { post: Post }) {
         </Avatar>
         <p>{post.authorName}</p>
       </Link>
-      <Link href={`/posts/${post.slug}`} className='flex justify-between p-2'>
+      <Link href={`/p/${post.slug}`} className='flex justify-between p-2'>
         <div>
           <h3 className='font-bold text-2xl'>{post.title}</h3>
         </div>
