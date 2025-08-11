@@ -52,10 +52,16 @@ async function PostContent({ slug }: { slug: string }) {
   );
 }
 
-export default function PostPage({ params }: { params: { slug: string } }) {
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <PostContent slug={params.slug} />
+      <PostContent slug={slug} />
     </Suspense>
   );
 }
