@@ -5,7 +5,7 @@ import { getPostIdTag } from "@/features/posts/db/cache";
 import { eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default async function page({
   params,
@@ -20,7 +20,9 @@ export default async function page({
 
   return (
     <>
-      <PostForm post={post} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <PostForm post={post} />
+      </Suspense>
     </>
   );
 }

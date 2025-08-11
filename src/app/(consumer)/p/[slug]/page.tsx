@@ -9,6 +9,7 @@ import { eq } from "drizzle-orm";
 import { UserIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default async function Post({
@@ -24,34 +25,36 @@ export default async function Post({
 
   return (
     <>
-      <section className='hero'>
-        <p className='tag tag-tri'>{formatter.format(post.createdAt)}</p>
-        <h1 className='heading'>{post.title}</h1>
-      </section>
-      <Container className='max-w-4xl mx-auto'>
-        <img
-          src={post.image}
-          className='aspect-video rounded-lg border-2 border-black'
-        />
-        <article className='flex flex-col justify-center'>
-          <div className='flex items-center max-w-3xl gap-2 mt-4'>
-            <Avatar>
-              <AvatarImage src={post.user.image || ""} alt={post.user.name} />
-              <AvatarFallback>
-                <UserIcon className='size-6' />
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <p>{post.user.name}</p>
-              <p>{formatter.format(post?.createdAt)}</p>
+      <Suspense fallback={<div>Loading...</div>}>
+        <section className='hero'>
+          <p className='tag tag-tri'>{formatter.format(post.createdAt)}</p>
+          <h1 className='heading'>{post.title}</h1>
+        </section>
+        <Container className='max-w-4xl mx-auto'>
+          <img
+            src={post.image}
+            className='aspect-video rounded-lg border-2 border-black'
+          />
+          <article className='flex flex-col justify-center'>
+            <div className='flex items-center max-w-3xl gap-2 mt-4'>
+              <Avatar>
+                <AvatarImage src={post.user.image || ""} alt={post.user.name} />
+                <AvatarFallback>
+                  <UserIcon className='size-6' />
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p>{post.user.name}</p>
+                <p>{formatter.format(post?.createdAt)}</p>
+              </div>
             </div>
-          </div>
 
-          <h1 className='font-extrabold text-5xl'>{post?.title}</h1>
+            <h1 className='font-extrabold text-5xl'>{post?.title}</h1>
 
-          <ReactMarkdown>{post.content}</ReactMarkdown>
-        </article>
-      </Container>
+            <ReactMarkdown>{post.content}</ReactMarkdown>
+          </article>
+        </Container>
+      </Suspense>
     </>
   );
 }
