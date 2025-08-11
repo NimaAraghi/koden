@@ -7,24 +7,29 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 
-export default async function page({
+export default function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PostLoader paramsPromise={params} />
+    </Suspense>
+  );
+}
+
+async function PostLoader({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ slug: string }>;
+}) {
+  const { slug } = await paramsPromise;
 
   const post = await getUserPost(slug);
+  if (!post) return notFound();
 
-  if (post === null) return notFound();
-
-  return (
-    <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <PostForm post={post} />
-      </Suspense>
-    </>
-  );
+  return <PostForm post={post} />;
 }
 
 async function getUserPost(slug: string) {
