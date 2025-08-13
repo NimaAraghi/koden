@@ -26,13 +26,13 @@ export async function insertPost(data: typeof PostTable.$inferInsert) {
 
   if (newPost == null) throw new Error("Failed to insert post");
 
-  revalidatePostCache(newPost.id);
+  revalidatePostCache(newPost.slug);
 
   return newPost;
 }
 
 export async function updatePost(
-  { slug }: { slug: string },
+  slug: string,
   data: Partial<typeof PostTable.$inferInsert>
 ) {
   const [updatedPost] = await db
@@ -43,12 +43,12 @@ export async function updatePost(
 
   if (updatedPost == null) throw new Error("Failed to update post");
 
-  revalidatePostCache(updatedPost.id);
+  revalidatePostCache(updatedPost.slug);
 
   return updatedPost;
 }
 
-export async function deletePost({ slug }: { slug: string }) {
+export async function deletePost(slug: string) {
   const [deletedPost] = await db
     .delete(PostTable)
     .where(eq(PostTable.slug, slug))
@@ -56,7 +56,7 @@ export async function deletePost({ slug }: { slug: string }) {
 
   if (deletedPost == null) throw new Error("Failed to delete post");
 
-  revalidatePostCache(deletedPost.id);
+  revalidatePostCache(deletedPost.slug);
 
   return deletedPost;
 }

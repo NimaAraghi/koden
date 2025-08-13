@@ -19,7 +19,12 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createPost } from "@/features/posts/actions/posts";
+import {
+  createPost,
+  unpublishPost,
+  updatePost,
+} from "@/features/posts/actions/posts";
+import { ActionButton } from "@/components/ActionButton";
 
 export default function PostForm({
   post,
@@ -48,7 +53,10 @@ export default function PostForm({
         authorId: session?.user.id || "",
       });
 
-      const { error, message } = await createPost({
+      const action =
+        post === null ? createPost : updatePost.bind(null, post?.slug || "");
+
+      const { error, message } = await action({
         ...data,
         status,
         image: imageUrl,
@@ -58,11 +66,7 @@ export default function PostForm({
       if (error) {
         toast.error(message);
       } else {
-        if (status === "published") {
-          router.push("/dashboard/posts");
-        } else {
-          toast.success("Post has been saved successfully");
-        }
+        router.push("/dashboard/posts");
       }
     };
   }
@@ -117,32 +121,32 @@ export default function PostForm({
             <>
               <Button
                 className='w-full md:w-auto'
-                variant='outline'
-                onClick={form.handleSubmit(onSubmit("draft"))}
-              >
-                Save as Draft
-              </Button>
-              <Button
-                className='w-full md:w-auto'
                 onClick={form.handleSubmit(onSubmit("published"))}
               >
                 Update Post
               </Button>
+              <ActionButton
+                variant='destructive'
+                action={unpublishPost.bind(null, post.slug)}
+                requireAreYouSure={true}
+              >
+                Unpublish post
+              </ActionButton>
             </>
           ) : (
             <>
               <Button
                 className='w-full md:w-auto'
+                onClick={form.handleSubmit(onSubmit("published"))}
+              >
+                Publish Post
+              </Button>
+              <Button
+                className='w-full md:w-auto'
                 variant='outline'
                 onClick={form.handleSubmit(onSubmit("draft"))}
               >
                 Save as Draft
-              </Button>
-              <Button
-                className='w-full md:w-auto'
-                onClick={form.handleSubmit(onSubmit("published"))}
-              >
-                Publish Post
               </Button>
             </>
           )}

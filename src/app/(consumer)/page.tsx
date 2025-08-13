@@ -19,7 +19,7 @@ export default async function Home() {
           knowledge and stories
         </p>
       </section>
-      <Container className='flex gap-4'>
+      <Container className='flex flex-col md:flex-row gap-4'>
         <div className='flex-1'>
           <h1 className='mb-4'>Newest Posts</h1>
           <div className='flex flex-col'>

@@ -1,14 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { ActionButton } from "@/components/ActionButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import React from "react";
+import { deletePost } from "../actions/posts";
 
 export default function PostTable({ posts }: { posts: any[] }) {
   return (
@@ -60,26 +51,14 @@ export default function PostTable({ posts }: { posts: any[] }) {
                 <Button asChild variant='outline'>
                   <Link href={`/${post.slug}/edit`}>Edit</Link>
                 </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant='destructive'>Delete</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your post and remove your data from our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Delete</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <ActionButton
+                  className='cursor-pointer'
+                  variant='destructive'
+                  action={deletePost.bind(null, post.slug)}
+                  requireAreYouSure={true}
+                >
+                  Delete
+                </ActionButton>
               </div>
             </TableCell>
           </TableRow>
