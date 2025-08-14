@@ -26,7 +26,7 @@ export default function PostTable({ posts }: { posts: any[] }) {
       <TableBody>
         {posts.map((post) => (
           <TableRow key={post.id}>
-            <TableCell>
+            <TableCell className='line-clamp-2'>
               <Link
                 href={`/p/${post.slug}`}
                 className='font-extrabold text-3xl text-blue-500'
@@ -37,11 +37,11 @@ export default function PostTable({ posts }: { posts: any[] }) {
             <TableCell>
               <Badge
                 className={
-                  post.status === "published" ? "bg-green-500 text-white" : ""
+                  post.status === "published"
+                    ? "bg-green-500 text-white"
+                    : "bg-yellow-500"
                 }
-                variant={
-                  post.status === "published" ? "secondary" : "destructive"
-                }
+                variant='destructive'
               >
                 {post.status}
               </Badge>

@@ -40,7 +40,7 @@ export default function PostCard({ post }: { post: Post }) {
             style={{ boxShadow: `2px 2px 0 0 ${colorClass}` }}
           >
             <img
-              className='aspect-video w-40 min-w-40 block'
+              className='aspect-video object-cover w-40 min-w-40 block'
               src={post.image}
               alt={post.title}
             />

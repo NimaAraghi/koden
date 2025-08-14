@@ -31,8 +31,6 @@ export default function PostForm({
 }: {
   post?: typeof PostTable.$inferSelect;
 }) {
-  const { data: session } = useSession();
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof postFormSchema>>({
@@ -50,17 +48,14 @@ export default function PostForm({
         ...data,
         status,
         image: imageUrl,
-        authorId: session?.user.id || "",
       });
 
-      const action =
-        post === null ? createPost : updatePost.bind(null, post?.slug || "");
+      const action = post ? updatePost.bind(null, post.slug || "") : createPost;
 
       const { error, message } = await action({
         ...data,
         status,
         image: imageUrl,
-        authorId: session?.user.id || "",
       });
 
       if (error) {
