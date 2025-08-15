@@ -5,7 +5,7 @@ import PostForm from "@/features/posts/components/PostForm";
 import { getPostIdTag } from "@/features/posts/db/cache";
 import { eq, and } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
 export default function Page({
@@ -26,7 +26,7 @@ async function PostLoader({
   paramsPromise: Promise<{ slug: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) return null;
+  if (!session?.user) redirect("/login");
 
   const { slug } = await paramsPromise;
   const post = await getUserPost(session?.user.id || "", slug);
