@@ -13,7 +13,6 @@ import { ForwardRefEditor } from "@/features/posts/components/ForwardRefEditor";
 import { postFormSchema } from "@/features/posts/schemas/postForm";
 import ImageUpload from "@/services/uploadthing/components/ImageUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -25,18 +24,25 @@ import {
   updatePost,
 } from "@/features/posts/actions/posts";
 import { ActionButton } from "@/components/ActionButton";
+import { TagsInput } from "../../tags/coponents/TagsInput";
 
 export default function PostForm({
   post,
 }: {
-  post?: typeof PostTable.$inferSelect;
+  post?: typeof PostTable.$inferSelect & {
+    tags: { tag: { id: string; name: string } }[];
+  };
 }) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof postFormSchema>>({
     defaultValues: post
-      ? { title: post.title, content: post.content }
-      : { title: "", content: "" },
+      ? {
+          title: post.title,
+          content: post.content,
+          tags: post.tags.map((t) => t.tag.name) || [],
+        }
+      : { title: "", content: "", tags: [] },
     resolver: zodResolver(postFormSchema),
   });
 
@@ -92,6 +98,22 @@ export default function PostForm({
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name='tags'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <TagsInput
+                          value={field.value || []}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
@@ -112,12 +134,11 @@ export default function PostForm({
           </Form>
         </div>
         <div className='flex w-full gap-2 py-4 mx-auto'>
-          {post && post.status === "published" ? (
+          {form.formState.isSubmitting ? (
+            <Button disabled>Saving...</Button>
+          ) : post && post.status === "published" ? (
             <>
-              <Button
-                className='w-full md:w-auto'
-                onClick={form.handleSubmit(onSubmit("published"))}
-              >
+              <Button onClick={form.handleSubmit(onSubmit("published"))}>
                 Update Post
               </Button>
               <ActionButton
@@ -130,14 +151,10 @@ export default function PostForm({
             </>
           ) : (
             <>
-              <Button
-                className='w-full md:w-auto'
-                onClick={form.handleSubmit(onSubmit("published"))}
-              >
+              <Button onClick={form.handleSubmit(onSubmit("published"))}>
                 Publish Post
               </Button>
               <Button
-                className='w-full md:w-auto'
                 variant='outline'
                 onClick={form.handleSubmit(onSubmit("draft"))}
               >

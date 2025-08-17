@@ -5,11 +5,13 @@ import Link from "next/link";
 import { UserIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { colors } from "@/lib/colors";
+import { Button } from "@/components/ui/button";
 
 interface Post {
   title: string;
   slug: string;
   image: string;
+  tags: string[];
   authorName: string;
   authorAvatar: string | null;
   createdAt: Date;
@@ -18,70 +20,62 @@ interface Post {
 export default function PostCard({ post }: { post: Post }) {
   const colorIndex = stringToNumber(post.slug);
   const colorClass = colors[colorIndex % colors.length];
-
   return (
-    <div className='flex flex-col border-b-2 border-gray-200 p-4'>
-      <Link href={`/${post.authorName}`} className='flex items-center gap-2'>
+    <div className='flex flex-col border-b-2 border-gray-200 px-none py-4 md:p-4'>
+      <Link
+        href={`/${post.authorName}`}
+        className='flex items-center gap-2 w-fit'
+      >
         <Avatar className='size-8'>
           <AvatarImage src={post.authorAvatar || ""} />
           <AvatarFallback>
             <UserIcon className='size-4' />
           </AvatarFallback>
         </Avatar>
-        <p>{post.authorName}</p>
-      </Link>
-      <Link href={`/p/${post.slug}`} className='flex justify-between p-2'>
         <div>
-          <h3 className='font-bold text-2xl'>{post.title}</h3>
-        </div>
-        <div className='shadow-[7px_7px_0px_0px_black] rounded-md inline-block'>
-          <div
-            className={`rounded-md border-2 border-black shadow-[2px_2px_0px_0px_${colorClass}] overflow-hidden`}
-            style={{ boxShadow: `2px 2px 0 0 ${colorClass}` }}
-          >
-            <img
-              className='aspect-video object-cover w-40 min-w-40 block'
-              src={post.image}
-              alt={post.title}
-            />
-          </div>
+          <p className='text-sm font-semibold'>{post.authorName}</p>
+          <p className='text-xs text-gray-500'>
+            {formatter.format(new Date(post.createdAt))}
+          </p>
         </div>
       </Link>
+      <div className='flex justify-between items-start p-2'>
+        <div className='flex-1'>
+          <Link href={`/p/${post.slug}`}>
+            <h3 className='font-bold text-2xl hover:text-blue-500'>
+              {post.title}
+            </h3>
+          </Link>
+          {post.tags.length > 1 && (
+            <div className='flex flex-wrap gap-2 mt-2'>
+              {post.tags.map((tag, index) => (
+                <Button key={index} asChild variant='ghost'>
+                  <Link href={`/tag/${tag}`} key={index}>
+                    # {tag}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+        <Link
+          href={`/p/${post.slug}`}
+          className='shadow-[7px_7px_0px_0px_black] rounded-md inline-block'
+        >
+          {post.image && (
+            <div
+              className={`rounded-md border-2 border-black overflow-hidden`}
+              style={{ boxShadow: `2px 2px 0 0 ${colorClass}` }}
+            >
+              <img
+                src={post.image}
+                alt={post.title}
+                className='aspect-video w-24 sm:w-32 md:w-40 object-cover'
+              />
+            </div>
+          )}
+        </Link>
+      </div>
     </div>
   );
 }
-
-// return (
-//   <div className='flex flex-col gap-2 p-4'>
-//     <Link
-//       href={`/posts/${post.slug}`}
-//       className='shadow-[7px_7px_0px_0px_black] rounded-md inline-block'
-//     >
-//       <div
-//         className={`rounded-md border-2 border-black shadow-[2px_2px_0px_0px_${colorClass}] overflow-hidden`}
-//         style={{ boxShadow: `2px 2px 0 0 ${colorClass}` }}
-//       >
-//         <img
-//           className='aspect-video block'
-//           src={post.image}
-//           alt={post.title}
-//         />
-//       </div>
-//     </Link>
-
-//     <h3 className='font-bold text-2xl'>{post.title}</h3>
-//     <span className='font-light text-sm'>
-//       {formatter.format(post.createdAt)}
-//     </span>
-
-//     <Link href={`/${post.authorName}`} className='flex gap-2 items'>
-//       <Avatar className='size-8'>
-//         <AvatarImage src={post.authorAvatar || ""} />
-//         <AvatarFallback>
-//           <UserIcon className='size-4' />
-//         </AvatarFallback>
-//       </Avatar>
-//       <p>{post.authorName}</p>
-//     </Link>
-//   </div>
-// );

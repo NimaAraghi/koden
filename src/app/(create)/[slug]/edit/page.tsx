@@ -41,5 +41,18 @@ async function getUserPost(userId: string, slug: string) {
 
   return db.query.PostTable.findFirst({
     where: and(eq(PostTable.slug, slug), eq(PostTable.authorId, userId)),
+    with: {
+      tags: {
+        columns: {},
+        with: {
+          tag: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
   });
 }

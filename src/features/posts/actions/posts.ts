@@ -11,7 +11,8 @@ import { getPostGlobalTag } from "../db/cache";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { db } from "@/drizzle/db";
 import { eq } from "drizzle-orm";
-import { PostTable } from "@/drizzle/schema";
+import { PostTable, PostTagTable } from "@/drizzle/schema";
+import { createTag } from "@/features/tags/actions/tags";
 
 export async function getUserPost(userId: string, slug: string) {
   "use cache";
@@ -59,6 +60,18 @@ export async function createPost(unsafeData: z.infer<typeof fullPostSchema>) {
 
   const newPost = await insertPost({ ...data, slug, authorId });
 
+  if (data.tags && data.tags.length > 0) {
+    for (const tagName of data.tags) {
+      const { tag } = await createTag({ name: tagName });
+
+      if (tag)
+        await db.insert(PostTagTable).values({
+          postId: newPost.id,
+          tagId: tag?.id,
+        });
+    }
+  }
+
   return { error: false, message: "Post created successfully" };
 }
 
@@ -85,6 +98,20 @@ export async function updatePost(
   if (!success) return { error: true, message: "Invalid data provided" };
 
   const updatedPost = await updatePostDB(slug, data);
+
+  await db.delete(PostTagTable).where(eq(PostTagTable.postId, updatedPost.id));
+
+  if (data.tags && data.tags.length > 0) {
+    for (const tagName of data.tags) {
+      const { tag } = await createTag({ name: tagName });
+
+      if (tag)
+        await db.insert(PostTagTable).values({
+          postId: updatedPost.id,
+          tagId: tag?.id,
+        });
+    }
+  }
 
   return { error: false, message: "Post created successfully" };
 }

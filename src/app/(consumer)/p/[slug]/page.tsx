@@ -30,10 +30,12 @@ async function PostContent({
         <h1 className='heading'>{post.title}</h1>
       </section>
       <Container className='max-w-4xl mx-auto'>
-        <img
-          src={post.image}
-          className='aspect-video rounded-lg border-2 border-black'
-        />
+        {post.image && (
+          <img
+            src={post.image}
+            className='aspect-video rounded-lg border-2 border-black'
+          />
+        )}
         <article className='flex flex-col justify-center'>
           <div className='flex items-center max-w-3xl gap-2 mt-4'>
             <Avatar>

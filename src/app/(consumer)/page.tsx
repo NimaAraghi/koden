@@ -1,13 +1,17 @@
 import Container from "@/components/Container";
 import { db } from "@/drizzle/db";
-import { PostTable, UserTable } from "@/drizzle/schema";
+import { PostTable, PostTagTable, TagTable, UserTable } from "@/drizzle/schema";
 import PostCard from "@/features/posts/components/PostCard";
 import { getPostGlobalTag } from "@/features/posts/db/cache";
-import { desc, eq } from "drizzle-orm";
+import TagsContainer from "@/features/tags/coponents/TagsContainer";
+import { getTagGlobalTag } from "@/features/tags/db/cache";
+import { desc, eq, sql } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 export default async function Home() {
   const posts = await getPosts();
+
+  console.log(posts.map((p) => p.id));
 
   return (
     <div>
@@ -19,16 +23,18 @@ export default async function Home() {
           knowledge and stories
         </p>
       </section>
-      <Container className='flex flex-col md:flex-row gap-4'>
-        <div className='flex-1'>
+      <Container className='flex flex-col items-start lg:flex-row gap-4'>
+        <div className='lg:order-1 w-full lg:w-80'>
+          <TagsContainer />
+        </div>
+        <div className='w-full md:w-4/5'>
           <h1 className='mb-4'>Newest Posts</h1>
           <div className='flex flex-col'>
-            {posts.map((post, index) => (
-              <PostCard key={index} post={post} />
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
             ))}
           </div>
         </div>
-        <div className='w-24 h-24 bg-gray-200 rounded-2xl shadow'></div>
       </Container>
     </div>
   );
@@ -37,6 +43,7 @@ export default async function Home() {
 async function getPosts() {
   "use cache";
   cacheTag(getPostGlobalTag());
+  cacheTag(getTagGlobalTag());
 
   return db
     .select({
@@ -47,9 +54,15 @@ async function getPosts() {
       createdAt: PostTable.createdAt,
       authorName: UserTable.name,
       authorAvatar: UserTable.image,
+      tags: sql<string[]>`coalesce(array_agg(${TagTable.name}), '{}')`.as(
+        "tags"
+      ),
     })
     .from(PostTable)
     .where(eq(PostTable.status, "published"))
     .innerJoin(UserTable, eq(UserTable.id, PostTable.authorId))
+    .leftJoin(PostTagTable, eq(PostTagTable.postId, PostTable.id))
+    .leftJoin(TagTable, eq(TagTable.id, PostTagTable.tagId))
+    .groupBy(PostTable.id, UserTable.id)
     .orderBy(desc(PostTable.createdAt));
 }
