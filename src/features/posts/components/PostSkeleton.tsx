@@ -5,7 +5,10 @@ export default function PostSkeleton() {
   return (
     <div className='flex flex-col'>
       {new Array(10).fill(null).map((_, index) => (
-        <div className='flex flex-col border-b-2 border-gray-200 px-none py-4 md:p-4'>
+        <div
+          key={index}
+          className='flex flex-col border-b-2 border-gray-200 px-none py-4 md:p-4'
+        >
           <div className='flex items-center gap-2 w-fit'>
             <Skeleton className='size-10 rounded-full' />
             <div>
