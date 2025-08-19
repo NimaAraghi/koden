@@ -13,7 +13,7 @@ export default async function Search({
 }) {
   return (
     <Container>
-      <Suspense>
+      <Suspense fallback={<h1>Search results for: </h1>}>
         <SuspendedTitle searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={<PostSkeleton />}>
@@ -29,7 +29,7 @@ async function SuspendedTitle({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q = "" } = await searchParams;
-  return <h1 className='text-2xl font-bold'>Search results for "{q}"</h1>;
+  return <h1 className='text-2xl font-bold'>Search results for: "{q}"</h1>;
 }
 
 async function SuspendedPage({
