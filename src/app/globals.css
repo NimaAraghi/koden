@@ -169,6 +169,12 @@
   hr {
     @apply my-8 border-t-2 border-gray-400;
   }
+
+  [type="search"]::-webkit-search-cancel-button,
+  [type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 @layer components {

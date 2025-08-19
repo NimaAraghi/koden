@@ -15,7 +15,7 @@ const sora = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Konde",
+  title: "koden",
   description: "Platform for sharing",
 };
 

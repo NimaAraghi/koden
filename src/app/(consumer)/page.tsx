@@ -11,8 +11,6 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 export default async function Home() {
   const posts = await getPosts();
 
-  console.log(posts.map((p) => p.id));
-
   return (
     <div>
       <section className='hero'>
