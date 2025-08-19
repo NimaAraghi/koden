@@ -37,10 +37,7 @@ export default function UserAvatar({ user }: { user: User }) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link
-            href='/dashboard/posts/create'
-            className='cursor-pointer text-md'
-          >
+          <Link href='/new' className='cursor-pointer text-md'>
             Create Post
           </Link>
         </DropdownMenuItem>
