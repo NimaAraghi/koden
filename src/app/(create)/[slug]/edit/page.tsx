@@ -15,12 +15,12 @@ export default function Page({
 }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <PostLoader paramsPromise={params} />
+      <SuspendedPage paramsPromise={params} />
     </Suspense>
   );
 }
 
-async function PostLoader({
+async function SuspendedPage({
   paramsPromise,
 }: {
   paramsPromise: Promise<{ slug: string }>;

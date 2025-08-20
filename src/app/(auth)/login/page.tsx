@@ -6,12 +6,12 @@ import React, { Suspense } from "react";
 export default function Login() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <LoginWithSessionCheck />
+      <SuspendedPage />
     </Suspense>
   );
 }
 
-async function LoginWithSessionCheck() {
+async function SuspendedPage() {
   const session = await auth();
   if (session) redirect("/dashboard");
   return <LoginForm />;

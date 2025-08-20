@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import SearchForm from "@/components/SearchForm";
 import { db } from "@/drizzle/db";
 import { PostTable, PostTagTable, TagTable, UserTable } from "@/drizzle/schema";
 import PostCard from "@/features/posts/components/PostCard";
@@ -13,7 +14,10 @@ export default async function Search({
 }) {
   return (
     <Container>
-      <Suspense fallback={<h1>Search results for: </h1>}>
+      <div className='block md:hidden'>
+        <SearchForm />
+      </div>
+      <Suspense fallback={<h1>Search results</h1>}>
         <SuspendedTitle searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={<PostSkeleton />}>
@@ -29,7 +33,11 @@ async function SuspendedTitle({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q = "" } = await searchParams;
-  return <h1 className='text-2xl font-bold'>Search results for: "{q}"</h1>;
+  return (
+    <h1 className='text-2xl font-bold'>
+      Search results {q ? `for "${q}"` : ""}
+    </h1>
+  );
 }
 
 async function SuspendedPage({
