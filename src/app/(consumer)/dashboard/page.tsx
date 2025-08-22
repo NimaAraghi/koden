@@ -1,7 +1,22 @@
-export default function Dashboard() {
+import { auth } from "@/auth";
+import ProfileForm from "@/features/users/components/ProfileForm";
+import React from "react";
+
+export default function Profile() {
   return (
-    <div className='flex flex-col rounded-md gap-5'>
-      <h1>dashbaord</h1>
+    <div>
+      <ProfileForm />
     </div>
+  );
+}
+
+export async function SuspendedPage() {
+  const session = await auth();
+  if (!session?.user) return null;
+
+  return (
+    <>
+      <h1>{session.user.username}</h1>
+    </>
   );
 }

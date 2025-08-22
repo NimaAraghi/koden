@@ -10,10 +10,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
+        session.user.username = token.username;
       }
 
       if (token.role && session.user) {
         session.user.role = token.role;
+        session.user.username = token.username;
       }
 
       return session;
@@ -26,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.username = existingUser.username;
 
       return token;
     },

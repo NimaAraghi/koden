@@ -12,6 +12,10 @@ export const userRoleEnum = pgEnum("user_role", userRoles);
 export const UserTable = pgTable("users", {
   id,
   name: varchar().default("guest").notNull(),
+  username: varchar()
+    .$defaultFn(() => `user_${crypto.randomUUID().slice(0, 8)}`)
+    .unique()
+    .notNull(),
   email: varchar().notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   password: varchar(),
