@@ -9,14 +9,3 @@ export default function Profile() {
     </div>
   );
 }
-
-export async function SuspendedPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  return (
-    <>
-      <h1>{session.user.username}</h1>
-    </>
-  );
-}
