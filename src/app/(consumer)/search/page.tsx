@@ -17,26 +17,10 @@ export default async function Search({
       <div className='block md:hidden'>
         <SearchForm />
       </div>
-      <Suspense fallback={<h1>Search results</h1>}>
-        <SuspendedTitle searchParams={searchParams} />
-      </Suspense>
       <Suspense fallback={<PostSkeleton />}>
         <SuspendedPage searchParams={searchParams} />
       </Suspense>
     </Container>
-  );
-}
-
-async function SuspendedTitle({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
-  const { q = "" } = await searchParams;
-  return (
-    <h1 className='text-2xl font-bold'>
-      Search results {q ? `for "${q}"` : ""}
-    </h1>
   );
 }
 
@@ -50,11 +34,18 @@ async function SuspendedPage({
 
   return (
     <div>
+      <h1 className='text-2xl font-bold'>
+        Search results {q ? `for "${q}"` : ""}
+      </h1>
       <Container>
         <div className='flex flex-col'>
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
+          {posts.length === 0 ? (
+            <div>
+              <p>No post Found</p>
+            </div>
+          ) : (
+            posts.map((post) => <PostCard key={post.id} post={post} />)
+          )}
         </div>
       </Container>
     </div>

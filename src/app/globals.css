@@ -162,6 +162,11 @@
     @apply list-decimal my-4;
   }
 
+  ul,
+  ol {
+    @apply pl-6;
+  }
+
   blockquote {
     @apply text-xl italic font-semibold text-gray-900 p-4 mx-auto border-l-4 border-blue-500 bg-gray-100 my-4;
   }
