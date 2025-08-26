@@ -7,30 +7,33 @@ import { AccountTable, UserTable } from "./drizzle/schema";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
+    async jwt({ token, trigger, session, user }) {
+      if (!token.sub) return token;
+
+      if (trigger === "update" && session) {
+        if (session.username) token.username = session.username;
+        if (session.role) token.role = session.role;
+        if (session.image) token.image = session.image;
+      }
+
+      const existingUser = await getUserById(token.sub);
+      if (existingUser) {
+        token.role = existingUser.role;
+        token.username = existingUser.username;
+        token.image = existingUser.image;
+      }
+
+      return token;
+    },
+
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
         session.user.username = token.username;
-      }
-
-      if (token.role && session.user) {
         session.user.role = token.role;
-        session.user.username = token.username;
+        session.user.image = token.image as string | null;
       }
-
       return session;
-    },
-    async jwt({ token }) {
-      if (!token.sub) return token;
-
-      const existingUser = await getUserById(token.sub);
-
-      if (!existingUser) return token;
-
-      token.role = existingUser.role;
-      token.username = existingUser.username;
-
-      return token;
     },
   },
   adapter: DrizzleAdapter(db, {

@@ -51,6 +51,7 @@ async function getPosts() {
       slug: PostTable.slug,
       createdAt: PostTable.createdAt,
       authorName: UserTable.name,
+      authorUsername: UserTable.username,
       authorAvatar: UserTable.image,
       tags: sql<string[]>`coalesce(array_agg(${TagTable.name}), '{}')`.as(
         "tags"

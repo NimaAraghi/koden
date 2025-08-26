@@ -5,6 +5,15 @@ import { UserTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { revalidateUserCache } from "./cache";
 
+export async function getUserByUsername(username: string) {
+  const [user] = await db
+    .select()
+    .from(UserTable)
+    .where(eq(UserTable.username, username));
+
+  return user ? user : null;
+}
+
 export async function getUserByEmail(email: string) {
   const [user] = await db
     .select()

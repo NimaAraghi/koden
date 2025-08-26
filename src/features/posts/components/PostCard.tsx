@@ -13,6 +13,7 @@ interface Post {
   image: string;
   tags: string[];
   authorName: string;
+  authorUsername: string;
   authorAvatar: string | null;
   createdAt: Date;
 }
@@ -23,7 +24,7 @@ export default function PostCard({ post }: { post: Post }) {
   return (
     <div className='flex flex-col border-b-2 border-gray-200 px-none py-4 md:p-4'>
       <Link
-        href={`/${post.authorName}`}
+        href={`/@${post.authorUsername}`}
         className='flex items-center gap-2 w-fit'
       >
         <Avatar className='size-8'>

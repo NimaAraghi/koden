@@ -79,7 +79,12 @@ export default function PostForm({
           <Form {...form}>
             <form className='flex flex-col gap-4 '>
               <div className='p-5 md:px-12 lg:px-16 md:py-8'>
-                <div className='my-5'>
+                <div className='flex gap-4 my-5'>
+                  {imageUrl && (
+                    <div>
+                      <img src={imageUrl} width={100} />
+                    </div>
+                  )}
                   <ImageUpload setImageUrl={setImageUrl} imageUrl={imageUrl} />
                 </div>
                 <FormField

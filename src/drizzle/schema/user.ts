@@ -19,8 +19,9 @@ export const UserTable = pgTable("users", {
   email: varchar().notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   password: varchar(),
-  role: userRoleEnum().default("user").notNull(),
   image: varchar(),
+  bio: varchar().default(""),
+  role: userRoleEnum().default("user").notNull(),
   createdAt,
   updatedAt,
 });

@@ -15,39 +15,28 @@ export default function ImageUpload({
   const [fileKey, setFileKey] = useState("");
 
   return (
-    <div className='flex gap-4'>
-      {imageUrl && (
-        <div>
-          <img src={imageUrl} width={100} />
-        </div>
-      )}
-      <div className='flex items-center gap-4'>
-        <UploadButton
-          appearance={{
-            allowedContent: { display: "none" },
-            button: { padding: "16px 8px", width: "fit-content" },
-          }}
-          content={{
-            button: `${imageUrl ? "change" : "Add a cover image"}`,
-          }}
-          endpoint='imageUploader'
-          onClientUploadComplete={(res) => {
-            // Do something with the response
-            setImageUrl(res[0].url);
-            setFileKey(res[0].key);
-            console.log(res);
+    <div className='flex items-center gap-4'>
+      <UploadButton
+        appearance={{
+          allowedContent: { display: "none" },
+          button: { padding: "16px 8px", width: "fit-content" },
+        }}
+        content={{
+          button: `${imageUrl ? "change" : "Add an image"}`,
+        }}
+        endpoint='imageUploader'
+        onClientUploadComplete={(res) => {
+          setImageUrl(res[0].url);
+          setFileKey(res[0].key);
 
-            toast.success("Upload Completed");
-          }}
-          onUploadError={(error: Error) => {
-            // Do something with the error.
-            toast.error(`ERROR! ${error.message}`);
-          }}
-        />
-        {imageUrl && (
-          <ImageRemove fileKey={fileKey} setImageUrl={setImageUrl} />
-        )}
-      </div>
+          toast.success("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          toast.error(`ERROR! ${error.message}`);
+        }}
+      />
+      {imageUrl && <ImageRemove fileKey={fileKey} setImageUrl={setImageUrl} />}
     </div>
   );
 }
