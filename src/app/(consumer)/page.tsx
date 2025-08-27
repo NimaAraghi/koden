@@ -50,12 +50,12 @@ export default async function Home() {
   );
 }
 
-async function getPosts(): Promise<Post[]> {
+async function getPosts() {
   "use cache";
   cacheTag(getPostGlobalTag());
   cacheTag(getTagGlobalTag());
 
-  return db
+  return (await db
     .select({
       id: PostTable.id,
       title: PostTable.title,
@@ -75,5 +75,5 @@ async function getPosts(): Promise<Post[]> {
     .leftJoin(PostTagTable, eq(PostTagTable.postId, PostTable.id))
     .leftJoin(TagTable, eq(TagTable.id, PostTagTable.tagId))
     .groupBy(PostTable.id, UserTable.id)
-    .orderBy(desc(PostTable.createdAt));
+    .orderBy(desc(PostTable.createdAt))) as Post[];
 }
