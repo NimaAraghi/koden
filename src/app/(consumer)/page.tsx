@@ -8,6 +8,18 @@ import { getTagGlobalTag } from "@/features/tags/db/cache";
 import { desc, eq, sql } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
+interface Post {
+  id: string;
+  title: string;
+  image: string;
+  slug: string;
+  createdAt: Date;
+  authorName: string;
+  authorUsername: string;
+  authorAvatar: string | null;
+  tags: string[];
+}
+
 export default async function Home() {
   const posts = await getPosts();
 
@@ -38,7 +50,7 @@ export default async function Home() {
   );
 }
 
-async function getPosts() {
+async function getPosts(): Promise<Post[]> {
   "use cache";
   cacheTag(getPostGlobalTag());
   cacheTag(getTagGlobalTag());
