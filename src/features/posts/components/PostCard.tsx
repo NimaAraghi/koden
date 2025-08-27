@@ -13,8 +13,8 @@ interface Post {
   image: string;
   slug: string;
   createdAt: Date;
-  authorName: string;
   authorUsername: string;
+  authorName: string;
   authorAvatar: string | null;
   tags: string[];
 }
