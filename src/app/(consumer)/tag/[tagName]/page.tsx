@@ -65,6 +65,7 @@ async function getPostsByTag(tagName: string) {
       slug: PostTable.slug,
       createdAt: PostTable.createdAt,
       authorName: UserTable.name,
+      authorUsername: UserTable.username,
       authorAvatar: UserTable.image,
       tags: sql<
         string[]
