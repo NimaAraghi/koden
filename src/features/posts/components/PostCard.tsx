@@ -8,14 +8,15 @@ import { colors } from "@/lib/colors";
 import { Button } from "@/components/ui/button";
 
 interface Post {
+  id: string;
   title: string;
-  slug: string;
   image: string;
-  tags: string[];
+  slug: string;
+  createdAt: Date;
   authorName: string;
   authorUsername: string;
   authorAvatar: string | null;
-  createdAt: Date;
+  tags: string[];
 }
 
 export default function PostCard({ post }: { post: Post }) {
