@@ -19,8 +19,11 @@ export default function UserAvatar({ user }: { user: User }) {
     <DropdownMenu>
       <DropdownMenuTrigger className='size-10 cursor-pointer'>
         <Avatar>
-          <AvatarImage className='rounded-full' src={user.image || ""} />
-          <AvatarFallback>
+          <AvatarImage
+            className='rounded-full size-10 object-cover'
+            src={user.image || ""}
+          />
+          <AvatarFallback className='size-10 text-center'>
             <UserIcon />
           </AvatarFallback>
         </Avatar>
