@@ -31,8 +31,6 @@ async function SuspendedPage({
   const { tagName } = await params;
   const posts = await getPostsByTag(tagName);
 
-  console.log(posts);
-
   return (
     <div>
       <h1>{tagName}</h1>
