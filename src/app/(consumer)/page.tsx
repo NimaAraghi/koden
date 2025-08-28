@@ -5,6 +5,7 @@ import PostCard from "@/features/posts/components/PostCard";
 import { getPostGlobalTag } from "@/features/posts/db/cache";
 import TagsContainer from "@/features/tags/coponents/TagsContainer";
 import { getTagGlobalTag } from "@/features/tags/db/cache";
+import { getUserGlobalTag } from "@/features/users/db/cache";
 import { desc, eq, sql } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
@@ -54,6 +55,7 @@ async function getPosts() {
   "use cache";
   cacheTag(getPostGlobalTag());
   cacheTag(getTagGlobalTag());
+  cacheTag(getUserGlobalTag());
 
   return db
     .select({

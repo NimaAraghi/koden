@@ -4,6 +4,7 @@ import { PostTable, PostTagTable, TagTable, UserTable } from "@/drizzle/schema";
 import PostCard from "@/features/posts/components/PostCard";
 import { getPostGlobalTag } from "@/features/posts/db/cache";
 import { getTagGlobalTag } from "@/features/tags/db/cache";
+import { getUserGlobalTag } from "@/features/users/db/cache";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import React, { Suspense } from "react";
@@ -50,6 +51,7 @@ async function getPostsByTag(tagName: string) {
   "use cache";
   cacheTag(getPostGlobalTag());
   cacheTag(getTagGlobalTag());
+  cacheTag(getUserGlobalTag());
 
   const taggedPosts = db
     .select({ postId: PostTagTable.postId })

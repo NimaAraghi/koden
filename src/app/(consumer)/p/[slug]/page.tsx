@@ -3,6 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { db } from "@/drizzle/db";
 import { PostTable } from "@/drizzle/schema";
 import { getPostIdTag } from "@/features/posts/db/cache";
+import { getUserGlobalTag } from "@/features/users/db/cache";
 import { formatter } from "@/lib/utils";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { eq } from "drizzle-orm";
@@ -74,6 +75,7 @@ export default function PostPage({
 async function getPost(slug: string) {
   "use cache";
   cacheTag(getPostIdTag(slug));
+  cacheTag(getUserGlobalTag());
 
   return db.query.PostTable.findFirst({
     columns: {
