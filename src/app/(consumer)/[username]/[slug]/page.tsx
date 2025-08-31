@@ -1,26 +1,26 @@
 import Container from "@/components/Container";
 import { Avatar } from "@/components/ui/avatar";
 import { db } from "@/drizzle/db";
-import { PostTable } from "@/drizzle/schema";
+import { PostTable, UserTable } from "@/drizzle/schema";
 import { getPostIdTag } from "@/features/posts/db/cache";
 import { getUserGlobalTag } from "@/features/users/db/cache";
 import { formatter } from "@/lib/utils";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { UserIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import ReactMarkdown from "react-markdown";
 
 // Child component that fetches and renders the post
 async function PostContent({
   paramsPromise,
 }: {
-  paramsPromise: Promise<{ slug: string }>;
+  paramsPromise: Promise<{ slug: string; username: string }>;
 }) {
-  const { slug } = await paramsPromise;
-  const post = await getPost(slug);
+  const { slug, username } = await paramsPromise;
+  const [post] = await getPost(slug, username);
 
   if (!post) notFound();
 
@@ -34,7 +34,7 @@ async function PostContent({
         {post.image && (
           <img
             src={post.image}
-            className='aspect-video rounded-lg border-2 border-black'
+            className='aspect-video object-cover rounded-lg border-2 border-black'
           />
         )}
         <article className='flex flex-col justify-center'>
@@ -63,7 +63,7 @@ async function PostContent({
 export default function PostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; username: string }>;
 }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -72,26 +72,23 @@ export default function PostPage({
   );
 }
 
-async function getPost(slug: string) {
+async function getPost(slug: string, username: string) {
   "use cache";
   cacheTag(getPostIdTag(slug));
   cacheTag(getUserGlobalTag());
 
-  return db.query.PostTable.findFirst({
-    columns: {
-      title: true,
-      image: true,
-      content: true,
-      createdAt: true,
-    },
-    where: eq(PostTable.slug, slug),
-    with: {
+  return db
+    .select({
+      title: PostTable.title,
+      content: PostTable.content,
+      image: PostTable.image,
+      createdAt: PostTable.createdAt,
       user: {
-        columns: {
-          name: true,
-          image: true,
-        },
+        name: UserTable.name,
+        image: UserTable.image,
       },
-    },
-  });
+    })
+    .from(PostTable)
+    .innerJoin(UserTable, eq(PostTable.authorId, UserTable.id))
+    .where(and(eq(PostTable.slug, slug), eq(UserTable.username, username)));
 }
