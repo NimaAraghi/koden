@@ -6,6 +6,7 @@ import { PostTable as DbPostTable } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 export default function Posts() {
   return (
@@ -17,16 +18,14 @@ export default function Posts() {
 
 async function SuspendedPage() {
   const session = await auth();
-  if (!session?.user) return null;
+  if (!session?.user) redirect("/login");
 
-  const userId = session.user.id;
-
-  const posts = await getUserPosts(userId || "");
+  const posts = await getUserPosts(session.user.id || "");
 
   return (
     <div>
       <h2 className='my-0'>Posts</h2>
-      <PostTable posts={posts} />
+      <PostTable posts={posts} username={session.user.username} />
     </div>
   );
 }

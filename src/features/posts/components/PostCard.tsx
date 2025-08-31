@@ -25,7 +25,7 @@ export default function PostCard({ post }: { post: Post }) {
   return (
     <div className='flex flex-col border-b-2 border-gray-200 px-none py-4 md:p-4'>
       <Link
-        href={`/user/${post.authorUsername}`}
+        href={`/${post.authorUsername}`}
         className='flex items-center gap-2 w-fit'
       >
         <Avatar className='size-8'>
@@ -43,7 +43,7 @@ export default function PostCard({ post }: { post: Post }) {
       </Link>
       <div className='flex justify-between items-start p-2'>
         <div className='flex-1'>
-          <Link href={`/p/${post.slug}`}>
+          <Link href={`/${post.authorUsername}/${post.slug}`}>
             <h3 className='font-bold text-2xl hover:text-blue-500'>
               {post.title}
             </h3>
@@ -61,7 +61,7 @@ export default function PostCard({ post }: { post: Post }) {
           )}
         </div>
         <Link
-          href={`/p/${post.slug}`}
+          href={`/${post.authorUsername}/${post.slug}`}
           className='shadow-[7px_7px_0px_0px_black] rounded-md inline-block'
         >
           {post.image && (

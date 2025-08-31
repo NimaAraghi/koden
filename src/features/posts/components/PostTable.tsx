@@ -13,7 +13,20 @@ import Link from "next/link";
 import React from "react";
 import { deletePost } from "../actions/posts";
 
-export default function PostTable({ posts }: { posts: any[] }) {
+interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  status: "published" | "draft";
+}
+
+export default function PostTable({
+  posts,
+  username,
+}: {
+  posts: Post[];
+  username: string;
+}) {
   return (
     <Table className='bg-white rounded-lg'>
       <TableHeader>
@@ -28,7 +41,7 @@ export default function PostTable({ posts }: { posts: any[] }) {
           <TableRow key={post.id}>
             <TableCell className='line-clamp-2'>
               <Link
-                href={`/p/${post.slug}`}
+                href={`/${username}/${post.slug}`}
                 className='font-extrabold text-3xl text-blue-500'
               >
                 {post.title}
@@ -49,7 +62,7 @@ export default function PostTable({ posts }: { posts: any[] }) {
             <TableCell>
               <div className='flex gap-2'>
                 <Button asChild variant='outline'>
-                  <Link href={`/${post.slug}/edit`}>Edit</Link>
+                  <Link href={`/${username}/${post.slug}/edit`}>Edit</Link>
                 </Button>
                 <ActionButton
                   className='cursor-pointer'
