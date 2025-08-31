@@ -16,19 +16,33 @@ export const CommentTable = pgTable("comments", {
   authorId: uuid()
     .references(() => UserTable.id, { onDelete: "restrict" })
     .notNull(),
+  parentId: uuid().references((): any => CommentTable.id, {
+    onDelete: "cascade",
+  }),
   content: text().notNull(),
   status: commentStatusEnum().default("approved").notNull(),
   createdAt,
   updatedAt,
 });
 
-export const CommentRelationships = relations(CommentTable, ({ one }) => ({
-  user: one(UserTable, {
-    fields: [CommentTable.authorId],
-    references: [UserTable.id],
-  }),
-  post: one(PostTable, {
-    fields: [CommentTable.postId],
-    references: [PostTable.id],
-  }),
-}));
+export const CommentRelationships = relations(
+  CommentTable,
+  ({ one, many }) => ({
+    user: one(UserTable, {
+      fields: [CommentTable.authorId],
+      references: [UserTable.id],
+    }),
+    post: one(PostTable, {
+      fields: [CommentTable.postId],
+      references: [PostTable.id],
+    }),
+    parent: one(CommentTable, {
+      fields: [CommentTable.parentId],
+      references: [CommentTable.id],
+      relationName: "parent",
+    }),
+    replies: many(CommentTable, {
+      relationName: "parent",
+    }),
+  })
+);
