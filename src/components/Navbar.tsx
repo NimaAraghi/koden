@@ -21,10 +21,10 @@ export default async function Navbar() {
           fallback={
             <div className='flex gap-4'>
               <Button variant='ghost' asChild>
-                <Link href='login'>Log in</Link>
+                <Link href='/login'>Log in</Link>
               </Button>
               <Button variant='default' asChild>
-                <Link href='signup'>Create ccount</Link>
+                <Link href='/signup'>Create ccount</Link>
               </Button>
             </div>
           }
@@ -56,10 +56,10 @@ async function AuthorizedComponent() {
       ) : (
         <div className='flex gap-4'>
           <Button variant='ghost' asChild>
-            <Link href='login'>Log in</Link>
+            <Link href='/login'>Log in</Link>
           </Button>
           <Button variant='default' asChild>
-            <Link href='signup'>Create ccount</Link>
+            <Link href='/signup'>Create ccount</Link>
           </Button>
         </div>
       )}

@@ -7,8 +7,7 @@ export const commentFormSchema = z.object({
 export const statusEnum = z.enum(["approved", "rejected"]);
 
 export const fullCommentFormSchema = commentFormSchema.extend({
-  postId: z.string().min(1, "Post ID is required"),
-  authorId: z.string().min(1, "User ID is required"),
-  parentId: z.string(),
-  statues: statusEnum.default("approved"),
+  postSlug: z.string().min(1, "Post slug is required"),
+  parentId: z.string().optional(),
+  statues: statusEnum.default("approved").optional(),
 });
